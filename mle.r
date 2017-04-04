@@ -42,13 +42,13 @@ mm_beta <- function(mu, var) {
 #'
 #' MLE 
 #' 
-mle_beta(p){
+mle_beta  <- function(p){
   
-  if(any(is.na(p))) error("P values vector contains NAs")
+  if(any(is.na(p))) stop("P values vector contains NAs")
   
   pbm = mm_beta(mu = mean(p),var = var(p))
   
-  if(!all(is.finite(c(pbm$alpha,pbm$beta)))) error("Method of the moments failed, aborting. Are you sure this is beta distributed?")
+  if(!all(is.finite(c(pbm$alpha,pbm$beta)))) stop("Method of the moments failed, aborting. Are you sure these data is beta distributed?")
   
   sol=newton_raphson(fun=loglik_beta, grad=gradient_beta,hess=hessian_beta,data=p,start=c(pbm$alpha,pbm$beta),eta=0.05, epsilon=1E-12, nmax=10000)
 
@@ -69,7 +69,7 @@ mle_beta(p){
 #'
 #' Simulation test of the goodness of fit
 #' 
-gof_beta(p,alpha_hat,beta_hat){
+gof_beta <- function(p,alpha_hat,beta_hat){
   n= length(p)
   ks.pvalue = mean(vapply(X = 1:100,FUN.VALUE = 0.001 ,FUN = 
                             function(x){
